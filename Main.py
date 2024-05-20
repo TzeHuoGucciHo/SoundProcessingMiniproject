@@ -32,19 +32,19 @@ def stop_audio():
     sd.stop()
 
 def update_reverb():
-    # Adjusted parameters for chapel-like reverb
-    comb_delay_times = [comb_delay_slider.get()]
-    comb_feedback_gains = [comb_feedback_slider.get()]
-    allpass_delay_times = [allpass_delay_slider.get()]
-    allpass_feedback_gains = [allpass_feedback_slider.get()]
+    # Adjusted parameters for a rich reverb
+    comb_delay_times = [comb_delay_slider1.get(), comb_delay_slider2.get(), comb_delay_slider3.get(), comb_delay_slider4.get()]
+    comb_feedback_gains = [comb_feedback_slider1.get(), comb_feedback_slider2.get(), comb_feedback_slider3.get(), comb_feedback_slider4.get()]
+    allpass_delay_times = [allpass_delay_slider1.get(), allpass_delay_slider2.get()]
+    allpass_feedback_gains = [allpass_feedback_slider1.get(), allpass_feedback_slider2.get()]
 
-    # Apply input signal to each comb filter
+    # Apply input signal to each comb filter in parallel
     reverb_signal = np.zeros(len(input_data))
     for i in range(len(comb_delay_times)):
         comb_output = comb_filter(input_data, comb_delay_times[i], comb_feedback_gains[i])
         reverb_signal += comb_output
 
-    # Apply input signal to each allpass filter
+    # Apply reverb signal to each allpass filter in series
     for i in range(len(allpass_delay_times)):
         allpass_output = allpass_filter(reverb_signal, allpass_delay_times[i], allpass_feedback_gains[i])
         reverb_signal = allpass_output
@@ -63,19 +63,49 @@ input_data, input_rate = librosa.load(input_file, sr=None, mono=True)
 # Create a Tkinter window
 window = tk.Tk()
 
-# Create sliders for adjusting the reverb parameters
-comb_delay_slider = Scale(window, from_=0, to=5000, orient=HORIZONTAL, length=400, label='Comb Filter Delay Time')
-comb_delay_slider.set(1500)
-comb_delay_slider.pack()
-comb_feedback_slider = Scale(window, from_=0, to=1, resolution=0.01, orient=HORIZONTAL, length=400, label='Comb Filter Feedback Gain')
-comb_feedback_slider.set(0.4)
-comb_feedback_slider.pack()
-allpass_delay_slider = Scale(window, from_=0, to=2500, orient=HORIZONTAL, length=400, label='Allpass Filter Delay Time')
-allpass_delay_slider.set(750)
-allpass_delay_slider.pack()
-allpass_feedback_slider = Scale(window, from_=0, to=1, resolution=0.01, orient=HORIZONTAL, length=400, label='Allpass Filter Feedback Gain')
-allpass_feedback_slider.set(0.4)
-allpass_feedback_slider.pack()
+# Create sliders for adjusting the comb filter parameters
+comb_delay_slider1 = Scale(window, from_=0, to=5000, orient=HORIZONTAL, length=400, label='Comb Filter 1 Delay Time')
+comb_delay_slider1.set(1557)
+comb_delay_slider1.pack()
+comb_feedback_slider1 = Scale(window, from_=0, to=1, resolution=0.01, orient=HORIZONTAL, length=400, label='Comb Filter 1 Feedback Gain')
+comb_feedback_slider1.set(0.6)
+comb_feedback_slider1.pack()
+
+comb_delay_slider2 = Scale(window, from_=0, to=5000, orient=HORIZONTAL, length=400, label='Comb Filter 2 Delay Time')
+comb_delay_slider2.set(1617)
+comb_delay_slider2.pack()
+comb_feedback_slider2 = Scale(window, from_=0, to=1, resolution=0.01, orient=HORIZONTAL, length=400, label='Comb Filter 2 Feedback Gain')
+comb_feedback_slider2.set(0.6)
+comb_feedback_slider2.pack()
+
+comb_delay_slider3 = Scale(window, from_=0, to=5000, orient=HORIZONTAL, length=400, label='Comb Filter 3 Delay Time')
+comb_delay_slider3.set(1491)
+comb_delay_slider3.pack()
+comb_feedback_slider3 = Scale(window, from_=0, to=1, resolution=0.01, orient=HORIZONTAL, length=400, label='Comb Filter 3 Feedback Gain')
+comb_feedback_slider3.set(0.6)
+comb_feedback_slider3.pack()
+
+comb_delay_slider4 = Scale(window, from_=0, to=5000, orient=HORIZONTAL, length=400, label='Comb Filter 4 Delay Time')
+comb_delay_slider4.set(1422)
+comb_delay_slider4.pack()
+comb_feedback_slider4 = Scale(window, from_=0, to=1, resolution=0.01, orient=HORIZONTAL, length=400, label='Comb Filter 4 Feedback Gain')
+comb_feedback_slider4.set(0.6)
+comb_feedback_slider4.pack()
+
+# Create sliders for adjusting the allpass filter parameters
+allpass_delay_slider1 = Scale(window, from_=0, to=2500, orient=HORIZONTAL, length=400, label='Allpass Filter 1 Delay Time')
+allpass_delay_slider1.set(225)
+allpass_delay_slider1.pack()
+allpass_feedback_slider1 = Scale(window, from_=0, to=1, resolution=0.01, orient=HORIZONTAL, length=400, label='Allpass Filter 1 Feedback Gain')
+allpass_feedback_slider1.set(0.5)
+allpass_feedback_slider1.pack()
+
+allpass_delay_slider2 = Scale(window, from_=0, to=2500, orient=HORIZONTAL, length=400, label='Allpass Filter 2 Delay Time')
+allpass_delay_slider2.set(556)
+allpass_delay_slider2.pack()
+allpass_feedback_slider2 = Scale(window, from_=0, to=1, resolution=0.01, orient=HORIZONTAL, length=400, label='Allpass Filter 2 Feedback Gain')
+allpass_feedback_slider2.set(0.5)
+allpass_feedback_slider2.pack()
 
 # Create buttons for playing the input and output audio
 play_input_button = tk.Button(window, text='Play Input', command=lambda: play_audio(input_data, input_rate))
